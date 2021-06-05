@@ -47,7 +47,6 @@ class ViewController: UIViewController {
         promptWord = UILabel()
         promptWord.translatesAutoresizingMaskIntoConstraints = false
         promptWord.font = UIFont.systemFont(ofSize: 24)
-//        promptWord.text = wordOptions.randomElement()!
         view.addSubview(promptWord)
         
         
@@ -77,7 +76,7 @@ class ViewController: UIViewController {
             lettersBox.heightAnchor.constraint(equalToConstant: 300),
             lettersBox.topAnchor.constraint(equalTo: promptWord.bottomAnchor, constant: 100),
             lettersBox.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            lettersBox.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -20)
+
             
             
         

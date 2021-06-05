@@ -12,13 +12,18 @@ class ViewController: UIViewController {
     
     var wordOptions = ["RHYTHM", "AWESOME", "TWICE", "CHARGE"]
     var letterOptions = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
-    var word = ""
     var letterButtons = [UIButton]()
+    var usedLetters = [String]()
     
+    var chosenWord = ""
     
     var scoreLabel: UILabel!
-    var chosenWord: UILabel!
+    var promptWord: UILabel!
     var userInput: UITextField!
+    var wordDisplayed = ""
+    
+    
+    var newWordOptions = [String]()
     
     
     
@@ -39,11 +44,11 @@ class ViewController: UIViewController {
         view.addSubview(scoreLabel)
         
         
-        chosenWord = UILabel()
-        chosenWord.translatesAutoresizingMaskIntoConstraints = false
-        chosenWord.font = UIFont.systemFont(ofSize: 24)
-        chosenWord.text = wordOptions.randomElement()!
-        view.addSubview(chosenWord)
+        promptWord = UILabel()
+        promptWord.translatesAutoresizingMaskIntoConstraints = false
+        promptWord.font = UIFont.systemFont(ofSize: 24)
+//        promptWord.text = wordOptions.randomElement()!
+        view.addSubview(promptWord)
         
         
         let lettersBox = UIView()
@@ -64,13 +69,13 @@ class ViewController: UIViewController {
             
             
             
-            chosenWord.topAnchor.constraint(equalTo: scoreLabel.bottomAnchor),
-            chosenWord.centerXAnchor.constraint(equalTo: view.layoutMarginsGuide.centerXAnchor),
+            promptWord.topAnchor.constraint(equalTo: scoreLabel.bottomAnchor),
+            promptWord.centerXAnchor.constraint(equalTo: view.layoutMarginsGuide.centerXAnchor),
             
             
             lettersBox.widthAnchor.constraint(equalToConstant: 300),
             lettersBox.heightAnchor.constraint(equalToConstant: 300),
-            lettersBox.topAnchor.constraint(equalTo: chosenWord.bottomAnchor, constant: 100),
+            lettersBox.topAnchor.constraint(equalTo: promptWord.bottomAnchor, constant: 100),
             lettersBox.centerXAnchor.constraint(equalTo: view.centerXAnchor),
 //            lettersBox.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -20)
             
@@ -110,11 +115,73 @@ class ViewController: UIViewController {
     @objc func letterTapped(_ sender: UIButton) {
         guard let buttonTitle = sender.titleLabel?.text else { return }
         
-        print(buttonTitle)
+        usedLetters.append(buttonTitle)
+//        print(usedLetters)
+//        sender.isHidden = true
+        
+        
+        for (index, letter) in chosenWord.enumerated() {
+            let strLetter = String(letter)
+            
+            
+            if usedLetters.contains(strLetter) {
+                print(strLetter)
+                var transformedWordDisplayed = Array(wordDisplayed)
+                transformedWordDisplayed[index] = letter
+//                    print(transformedWordDisplayed[index])
+                wordDisplayed = String(transformedWordDisplayed)
+                
+                
+            }
+            
+           
+        }
+        
+        promptWord.text? = wordDisplayed
+        
+        
+        if wordDisplayed == chosenWord {
+            wordDisplayed = ""
+            
+            score += 5
+            
+            
+            let ac = UIAlertController(title: "You got it!", message: "Word was guessed correctly, onto the next!", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "Continue", style: .default))
+            present(ac, animated: true)
+            nextLevel(wordToRemove: chosenWord)
+        }
+        
+        
+    }
+    
+    func nextLevel(wordToRemove: String) {
+            newWordOptions = wordOptions.filter {$0 != wordToRemove}
+            wordOptions = newWordOptions
+            usedLetters.removeAll()
+            loadLevel()
+        
     }
     
     
     func loadLevel() {
+        
+        chosenWord = wordOptions.randomElement()!
+//        promptWord.text = chosenWord
+//        promptWord.text = wordOptions.randomElement()!
+        
+        
+        print(chosenWord)
+        
+        
+        for _ in chosenWord {
+//            let strLetter = String(letter)
+            print(chosenWord)
+            wordDisplayed+="?"
+        }
+        
+        promptWord.text = wordDisplayed
+        
         
         for i in 0..<26 {
             letterButtons[i].setTitle(letterOptions[i], for: .normal)
